@@ -96,10 +96,13 @@ int main() {
                 std::cin >> userAnswers[i];
             }
             AnswerChecker(userAnswers, questions, numQuestions, score);
-            UpdateScore(head, counter, score);
+            UpdateScore(head, counter - 1, score);
             score = 0;
             break;
         case 2:
+            ViewPlayers(head);
+            break;
+        case 3:
             SearchNode(head);
             break;
         case 0:
@@ -199,7 +202,6 @@ void TraverseList(ItemNode* head) {
 }
 
 void SearchNode(ItemNode* head) {
-    TraverseList(head);
     ItemNode* curr = head;
     int WhatToFind;
 
@@ -211,7 +213,7 @@ void SearchNode(ItemNode* head) {
 
     while (curr) {
         if (curr->data.id == WhatToFind) {
-            std::cout << curr->data.id << ". " << curr->data.name
+            std::cout << curr->data.id + 1 << ". " << curr->data.name
                 << " | ID: " << curr->data.id
                 << " | Score: " << curr->data.score << std::endl;
             system("pause");
@@ -231,4 +233,8 @@ void AnswerChecker(char userAnswers[], Question questions[], int numQuestions, i
             score++;
         }
     }
+}
+
+void ViewPlayers(ItemNode* head) {
+    TraverseList(head);
 }
