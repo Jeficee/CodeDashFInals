@@ -27,7 +27,6 @@
 #include <array>
 #include <iostream>
 #include <string>
-#include <cstdlib>
 
 
 struct ItemData {
@@ -100,9 +99,6 @@ int main() {
             score = 0;
             break;
         case 2:
-            ViewPlayers(head);
-            break;
-        case 3:
             SearchNode(head);
             break;
         case 0:
@@ -202,6 +198,7 @@ void TraverseList(ItemNode* head) {
 }
 
 void SearchNode(ItemNode* head) {
+    TraverseList(head);
     ItemNode* curr = head;
     int WhatToFind;
 
@@ -233,8 +230,4 @@ void AnswerChecker(char userAnswers[], Question questions[], int numQuestions, i
             score++;
         }
     }
-}
-
-void ViewPlayers(ItemNode* head) {
-    TraverseList(head);
 }
