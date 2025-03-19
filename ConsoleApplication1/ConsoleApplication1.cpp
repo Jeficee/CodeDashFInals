@@ -61,6 +61,10 @@ void SearchNode(ItemNode* head);
 
 void TraverseList(ItemNode* head);
 
+void UpdateScore(ItemNode* head, int playerId, int newScore);
+
+void AnswerChecker(char userAnswers[], Question questions[], int numQuestions, int& score);
+
 int main() {
     const string INSTRUCTIONS[] = { "New Game", "Search"};
     const int MAX = end(INSTRUCTIONS) - begin(INSTRUCTIONS);
@@ -91,6 +95,9 @@ int main() {
                 std::cout << "Your answer: ";
                 std::cin >> userAnswers[i];
             }
+            AnswerChecker(userAnswers, questions, numQuestions, score);
+            UpdateScore(head, counter - 1, score); // Update the score for the current player
+            score = 0; // Reset score for the next game
             break;
         case 2:
             SearchNode(head);
@@ -139,28 +146,48 @@ void CreateNode(ItemNode*& head, ItemNode*& tail, int& counter) {
     cout << "Add new player: \n";
     cin.ignore();
     InputInstruction("Enter Name: ", temp->data.name);
-    temp->data.id = 1;
-    cin.ignore();
     temp->data.id = counter;
+    temp->data.score = 0; // Initialize score to 0 for new players
 
     system("cls");
 
     if (head) {
         tail->next = temp;
         tail = temp;
-
-        cout << "Added New Player\n\n\n";
-        cout << "Your ID is: " << temp->data.id << endl;
-    }
-    else {
-
+    } else {
+        head = temp;
         tail = temp;
-
-        cout << "Created New Game and Added New Player\n\n\n";
-        cout << "Your ID is: " << temp->data.id << endl;
     }
 
+    cout << "Player Added! ID: " << temp->data.id << endl;
     counter++;
+}
+
+void UpdateScore(ItemNode* head, int playerId, int newScore) {
+    ItemNode* curr = head;
+
+    while (curr) {
+        if (curr->data.id == playerId) {
+            curr->data.score = newScore;
+            cout << "Score updated for Player ID: " << playerId << endl;
+            return;
+        }
+        curr = curr->next;
+    }
+
+    cout << "Player ID not found!" << endl;
+}
+
+void TraverseList(ItemNode* head) {
+    ItemNode* curr = head;
+
+    while (curr) {
+        cout << "Player: " << curr->data.name 
+             << " | ID: " << curr->data.id 
+             << " | Score: " << curr->data.score << endl;
+
+        curr = curr->next;
+    }
 }
 
 void SearchNode(ItemNode* head) {
@@ -189,21 +216,10 @@ void SearchNode(ItemNode* head) {
     system("cls");
 }
 
-void TraverseList(ItemNode* head) {
-    ItemNode* curr = head;
-    int counter = 1;
-
-    while (curr) {
-        cout << counter << ". " << curr->data.name << " | ID: " << curr->data.id
-            << " | Score: " << curr->data.score << endl;
-
-        curr = curr->next;
-        counter++;
-    }
-}
-
-void AnswerChecker(char userAnswers[], Question questions[]) {
-    if (tolower(userAnswers[i]) == questions[i].correctAnswer) {
-        score++;
+void AnswerChecker(char userAnswers[], Question questions[], int numQuestions, int& score) {
+    for (int i = 0; i < numQuestions; i++) {
+        if (tolower(userAnswers[i]) == questions[i].correctAnswer) {
+            score++;
+        }
     }
 }
