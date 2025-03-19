@@ -1,3 +1,4 @@
+
 /**
  * QUEUE - LILO/FIFO
  *
@@ -28,11 +29,10 @@
 #include <string>
 #include <cstdlib>
 
-using namespace std;
 
 struct ItemData {
     int id = 0, score = 0;
-    string name = "";
+    std::string name = "";
 };
 
 struct ItemNode {
@@ -48,10 +48,10 @@ struct Question {
     char correctAnswer;
 };
 
-void InputInstruction(string instruction, string& data);
-void InputInstruction(string instruction, int& data);
+void InputInstruction(std::string instruction, std::string& data);
+void InputInstruction(std::string instruction, int& data);
 
-void MainMenu(const string INSTRUCTIONS[], const int MAX, int& choice);
+void MainMenu(const std::string INSTRUCTIONS[], const int MAX, int& choice);
 
 void CreateNode(ItemNode*& head, ItemNode*& tail, int& counter);
 
@@ -66,7 +66,7 @@ void UpdateScore(ItemNode* head, int playerId, int newScore);
 void AnswerChecker(char userAnswers[], Question questions[], int numQuestions, int& score);
 
 int main() {
-    const string INSTRUCTIONS[] = { "New Game", "Search"};
+    const std::string INSTRUCTIONS[] = { "New Game", "Search" };
     const int MAX = end(INSTRUCTIONS) - begin(INSTRUCTIONS);
     const int numQuestions = 10;
     Question questions[numQuestions] = { {"What is the english of the word Salapi? \n   a) Money\n   b) King\n   c) Egg\n   d) Sandwich", 'a'},
@@ -91,13 +91,13 @@ int main() {
         case 1:
             CreateNode(head, tail, counter);
             for (int i = 0; i < numQuestions; i++) {
-                std::cout << questions[i].text << std::endl;
+                std::cout << std::endl << questions[i].text << std::endl;
                 std::cout << "Your answer: ";
                 std::cin >> userAnswers[i];
             }
             AnswerChecker(userAnswers, questions, numQuestions, score);
-            UpdateScore(head, counter - 1, score); // Update the score for the current player
-            score = 0; // Reset score for the next game
+            UpdateScore(head, counter, score);
+            score = 0;
             break;
         case 2:
             SearchNode(head);
@@ -114,28 +114,35 @@ int main() {
     return 0;
 }
 
-void InputInstruction(string instruction, string& data) {
-    cout << instruction << endl;
-    getline(cin, data);
+void Border() {
+    std::cout << "------------------------------------------------------------\n";
 }
 
-void InputInstruction(string instruction, int& data) {
-    cout << instruction << endl;
-    cin >> data;
+void InputInstruction(std::string instruction, std::string& data) {
+    std::cout << instruction << std::endl;
+    std::getline(std::cin, data);
 }
 
-void MainMenu(const string INSTRUCTIONS[], const int MAX, int& choice) {
-    cout << "Game Menu: \n\n";
+void InputInstruction(std::string instruction, int& data) {
+    std::cout << instruction << std::endl;
+    std::cin >> data;
+}
+
+void MainMenu(const std::string INSTRUCTIONS[], const int MAX, int& choice) {
+    Border();
+    std::cout << "Game: Translation Practice Tool (Multiple Choice) \n";
+    Border();
     if (MAX > 0) {
         for (int i = 0; i < MAX; i++) {
-            cout << i + 1 << ": " << INSTRUCTIONS[i] << endl;
+            std::cout << i + 1 << ": " << INSTRUCTIONS[i] << std::endl;
         }
-        cout << "0. Exit\n";
-        cout << ":: ";
-        cin >> choice;
+        std::cout << "0. Exit\n";
+        std::cout << ":: ";
+        std::cin >> choice;
+        Border();
     }
     else {
-        cout << "No Functions yet are available.\n\n\n";
+        std::cout << "No Functions yet are available.\n\n\n";
     }
     system("cls");
 }
@@ -143,24 +150,27 @@ void MainMenu(const string INSTRUCTIONS[], const int MAX, int& choice) {
 void CreateNode(ItemNode*& head, ItemNode*& tail, int& counter) {
     ItemNode* temp = new ItemNode;
 
-    cout << "Add new player: \n";
-    cin.ignore();
+    std::cout << "Add new player: \n";
+    std::cin.ignore();
     InputInstruction("Enter Name: ", temp->data.name);
     temp->data.id = counter;
-    temp->data.score = 0; // Initialize score to 0 for new players
+    temp->data.score = 0;
 
     system("cls");
 
     if (head) {
         tail->next = temp;
         tail = temp;
-    } else {
+    }
+    else {
         head = temp;
         tail = temp;
     }
 
-    cout << "Player Added! ID: " << temp->data.id << endl;
+    std::cout << "Welcome " << temp->data.name << "! Good luck with the Quiz!" << std::endl;
+    std::cout << "ID: " << temp->data.id << std::endl;
     counter++;
+    Border();
 }
 
 void UpdateScore(ItemNode* head, int playerId, int newScore) {
@@ -169,42 +179,41 @@ void UpdateScore(ItemNode* head, int playerId, int newScore) {
     while (curr) {
         if (curr->data.id == playerId) {
             curr->data.score = newScore;
-            cout << "Score updated for Player ID: " << playerId << endl;
             return;
         }
         curr = curr->next;
     }
-
-    cout << "Player ID not found!" << endl;
 }
 
 void TraverseList(ItemNode* head) {
     ItemNode* curr = head;
 
     while (curr) {
-        cout << "Player: " << curr->data.name 
-             << " | ID: " << curr->data.id 
-             << " | Score: " << curr->data.score << endl;
+        Border();
+        std::cout << "Player: " << curr->data.name
+            << " | ID: " << curr->data.id << std::endl;
+
 
         curr = curr->next;
     }
 }
 
 void SearchNode(ItemNode* head) {
+    TraverseList(head);
     ItemNode* curr = head;
     int WhatToFind;
 
-    TraverseList(head);
-    cout << "ID to check full details: ";
-    cin >> WhatToFind;
+    Border();
+    std::cout << "ID to check full details: ";
+    std::cin >> WhatToFind;
 
     system("cls");
 
     while (curr) {
         if (curr->data.id == WhatToFind) {
-            cout << curr->data.id << ". " << curr->data.name
+            std::cout << curr->data.id << ". " << curr->data.name
                 << " | ID: " << curr->data.id
-                << " | Score: " << curr->data.score << endl;
+                << " | Score: " << curr->data.score << std::endl;
             system("pause");
             system("cls");
             return;
